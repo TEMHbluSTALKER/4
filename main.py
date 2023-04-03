@@ -6,93 +6,117 @@ import time
 def TaskSelection():
     print("Выберите номер задачи:\n"
           "1 - Угадайте число.\n"
-          "2 - повторяющиеся элементы в списке.\n"
+          "2 - Повторяющиеся элементы в списке.\n"
           "3 - Выходные дни недели.\n"
           "4 - Студенты.")
     number = input()
     match number:
         case "1":
-            DivisionBy3()
+            GuessTheNumber()
         case "2":
-            Dividing100ByANumber()
+            DuplicateElements()
         case "3":
-            MagicDate()
+            DaysOff()
         case "4":
-            LuckyTicket()
+            Students()
         case _:
             print("Введен неправильный номер.")
             TaskSelection()
 
 ###################################################
 def GuessTheNumber():
+    ListOfNumbers = list()
+    for i in range(5):
+        ListOfNumbers.append(random.randint(0, 9))
     while 1 == 1:
         try:
-            Number = int(input('Введите число: '))
-            Result = Number % 3
+            Number = int(input('Введите целое число (от 0 до 9): '))
         except ValueError:
             print('Введено не число!')
         else:
-            if Result == 0 and Number != 0:
-                print('Число', Number, 'делится на 3! ')
-            elif Number == 0:
-                print('Введён ноль!')
+            if ListOfNumbers.count(Number) == 0:
+                print('Нет такого числа!')
             else:
-                print('Число', Number, 'не делится на 3!')
+                print('Поздравляю, Вы угадали число!')
+            print('Сгенерированы числа: ', *ListOfNumbers)
             break
 ###################################################
 
 def DuplicateElements():
-    while 1 == 1:
-        try:
-            Number = int(input('Введите число: '))
-            Result = 100 / Number
-        except ZeroDivisionError:
-            print('Введён ноль!')
-        except ValueError:
-            print('Введено не число!')
-        else:
-            print('Результат деления 100 на введённое число: ', Result)
-            break
+    N = 10
+    ListOfNumbers = list()
+    for i in range(N):
+        ListOfNumbers.append(random.randint(0, 9))
+    print('Сгенерированы числа: ', *ListOfNumbers)
+    DuplicateNumbers = []
+    for i in range(N):
+        Counter = 0
+        for j in range(i, N):
+            if ListOfNumbers[i] == ListOfNumbers[j]:
+                Counter += 1
+        if Counter > 1:
+            DuplicateNumbers.append(ListOfNumbers[i])
+    DuplicateNumbers = set(DuplicateNumbers)
+    print('Повторяющиеся элементы:', *DuplicateNumbers)
 ###################################################
 
 def DaysOff():
     while 1 == 1:
-        date = input('Введите дату в формате дд.мм.гггг: ')
         try:
-            valid_date = time.strptime(date, '%d.%m.%Y')
-            date = date.split('.')
+            Number = int(input('Введите количество выходных дней на неделе: '))
         except ValueError:
-            print('Введена не дата!')
+            print('Введено не число!')
         else:
-            if int(date[0]) * int(date[1]) == int(date[2][2:4]):
-                print('Дата магическая!')
-            else:
-                print('Дата не является магической!')
+            print('Введённое число: ', Number)
             break
-
+    if Number >= 0 and Number <=7:
+        Weekday = list()
+        Weekend = list()
+        Days = ('Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье')
+        for i in range(7-Number):
+            Weekday.append(Days[i])
+        print('Ваши рабочие дни: ', *Weekday)
+        for i in range(7-Number,7):
+            Weekend.append(Days[i])
+        print('Ваши выходные дни: ', *Weekend)
+    else:
+        print('В неделе не может быть', Number, 'выходных.')
 ###################################################
 
 def Students():
+    FirstGroup = ['Петров', 'Иванов', 'Сидоров', 'Ивушкин', 'Ижорский', 'Васин', 'Матросов', 'Федоров', 'Кущин', 'Фролов']
+    SecondGroup = ['Кукушкин', 'Бочкарев', 'Усачев', 'Бунин', 'Толстой', 'Романов', 'Милиганов', 'Левин', 'Панов', 'Кучков']
+    print('Студенты 1 группы:', *FirstGroup)
+    print('Студенты 2 группы:', *SecondGroup)
     while 1 == 1:
-        try:
-            TicketNumber = input('Введите номер билета: ')
-            AmountLeft = 0
-            AmountRight = 0
-            if len(TicketNumber) % 2 == 0:
-                for i in TicketNumber[0 : int(len(TicketNumber) / 2)]:
-                    AmountLeft = AmountLeft + int(i)
-                for i in TicketNumber[int(len(TicketNumber) / 2) : int(len(TicketNumber))+1]:
-                    AmountRight = AmountRight + int(i)
-                if AmountLeft == AmountRight:
-                    print('Билет счастливый!')
-                else:
-                    print('Билет не является счастливым!')
-                break
-            else:
-                print('Нечётное количество цифр!')
-        except ValueError:
-            print('Введено не число!')
-
+        SelectedFrom1Group = list()
+        for i in range(5):
+            SelectedFrom1Group.append(random.randint(0, 9))
+        SelectedFrom1Group = set(SelectedFrom1Group)
+        if len(SelectedFrom1Group) == 5:
+            break
+    while 1 == 1:
+        SelectedFrom2Group = list()
+        for i in range(5):
+            SelectedFrom2Group.append(random.randint(0, 9))
+        SelectedFrom2Group = set(SelectedFrom2Group)
+        if len(SelectedFrom2Group) == 5:
+            break
+    Team = list()
+    for i in SelectedFrom1Group:
+        Team.append(FirstGroup[i])
+    for i in SelectedFrom2Group:
+        Team.append(SecondGroup[i])
+    tuple(Team)
+    print('Студенты, выбранные из двух групп:', *Team)
+    print('Количество студентов в команде (длина кортежа):', len(Team))
+    print('Фамилии команды отсортированные по алфавиту:', sorted(Team))
+    CounterIvanov = Team.count('Иванов')
+    if CounterIvanov != 0:
+        print('Студент Иванов входит в полученную команду.')
+    else:
+        print('Студент Иванов не входит в полученную команду.')
+    print('Фамилия Иванов встречается:', CounterIvanov, 'раз.')
 ###################################################
 
 #Основная программа
